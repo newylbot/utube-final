@@ -7,8 +7,7 @@ from ..utubebot import UtubeBot
 
 
 @UtubeBot.on_message(
-    Filters.private
-    & Filters.incoming
+    Filters.incoming
     & Filters.command("start")
     & Filters.user(Config.AUTH_USERS)
 )

@@ -13,8 +13,7 @@ log = logging.getLogger(__name__)
 
 
 @UtubeBot.on_message(
-    Filters.private
-    & Filters.incoming
+    Filters.incoming
     & Filters.command("authorise")
     & Filters.user(Config.AUTH_USERS)
 )
@@ -52,8 +51,7 @@ async def _auth(c: UtubeBot, m: Message) -> None:
 
 
 @UtubeBot.on_message(
-    Filters.private
-    & Filters.incoming
+    Filters.incoming
     & Filters.command("save_auth_data")
     & Filters.reply
     & Filters.user(Config.AUTH_USERS)
