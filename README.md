@@ -65,7 +65,7 @@ export UPLOAD_MODE="unlisted"
 ## 🤙🏻Contact
 For support, contact **[๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ](https://telegram.dog/itz_lumino)**.
 
-## License
+## 🪪License
 Released under [GNU GPL v3.0](LICENSE).
 
 
