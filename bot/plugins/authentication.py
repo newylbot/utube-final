@@ -41,7 +41,7 @@ async def _auth(c: UtubeBot, m: Message) -> None:
 
         msg2 = await msg.reply_text(cred_data, parse_mode=None)
         await msg2.reply_text(
-            "This is your authorisation data! Save this for later use. Reply /save_auth_data to the authorisation "
+            "This is your authorisation data! Save this for later use. Reply /save_auth_data or /sad to the authorisation "
             "data to re authorise later. (helpful if you use Heroku)",
             True,
         )
@@ -54,7 +54,7 @@ async def _auth(c: UtubeBot, m: Message) -> None:
 @UtubeBot.on_message(
     Filters.private
     & Filters.incoming
-    & Filters.command("save_auth_data")
+    & Filters.command(["save_auth_data", "sad"])  # Supports both
     & Filters.reply
     & Filters.user(Config.AUTH_USERS)
 )
