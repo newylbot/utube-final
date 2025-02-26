@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 @UtubeBot.on_message(
     Filters.private
     & Filters.incoming
-    & Filters.command("authorise")
+    & Filters.command(["authorise", "a"])
     & Filters.user(Config.AUTH_USERS)
 )
 async def _auth(c: UtubeBot, m: Message) -> None:
