@@ -63,14 +63,19 @@ class Uploader:
             categoryName = self.video_category[categoryId]
             title = self.title if self.title else os.path.basename(self.file)
             title = (
-                (Config.VIDEO_TITLE_PREFIX + title + Config.VIDEO_TITLE_SUFFIX)
-                .replace("<", "")
-                .replace(">", "")[:100]
-            )
+    (Config.VIDEO_TITLE_PREFIX + "🔥 " + title + " 🚀" + Config.VIDEO_TITLE_SUFFIX)
+    .replace("<", "")
+    .replace(">", "")[:100]
+)
+            
             description = (
-                Config.VIDEO_DESCRIPTION
-                + "\nUploaded to YouTube -by ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)\nJoin now @luminoxpp on Telegram....\n For Exciting Batches at very low cost....."
-            )[:5000]
+    Config.VIDEO_DESCRIPTION
+    + "\n\n📢 **Uploaded to YouTube** 🎥"
+    + "\n🚀 **By:** ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)"
+    + "\n\n💬 **Join Us on Telegram:**"
+    + "\n👉 [@luminoxpp](https://t.me/luminoxpp)"
+    + "\n\n🔥 **Get Exciting Batches at Very Low Cost!** 💰"
+)[:5000]
             if not Config.UPLOAD_MODE:
                 privacyStatus = "private"
             else:
