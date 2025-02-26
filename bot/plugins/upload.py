@@ -9,6 +9,7 @@ from typing import Tuple, Union
 
 from pyrogram import StopTransmission
 from pyrogram import filters as Filters
+from pyrogram import enums  # Add this at the top if not already present
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
 from ..translations import Messages as tr
@@ -56,7 +57,7 @@ async def _upload(c: UtubeBot, m: Message):
 
     download = Downloader(m)
     status, file = await download.start(progress, snt, c, download_id)
-    log.debug(status, file)
+    log.debug(f"{status}: {file}")
     c.download_controller.pop(download_id)
 
     if not status:
@@ -74,11 +75,11 @@ async def _upload(c: UtubeBot, m: Message):
     title = " ".join(m.command[1:])
     upload = Uploader(file, title)
     status, link = await upload.start(progress, snt)
-    log.debug(status, link)
+    log.debug(f"{status}: {link}")
     if not status:
         c.counter -= 1
         c.counter = max(0, c.counter)
-    await snt.edit_text(text=link, parse_mode="markdown")
+    await snt.edit_text(text=link, parse_mode=enums.ParseMode.MARKDOWN)
 
 
 def get_download_id(storage: dict) -> str:
