@@ -69,12 +69,12 @@ class Uploader:
             )
             description = (
                 Config.VIDEO_DESCRIPTION
-                + "\nUploaded to YouTube with https://tx.me/youtubeitbot"
+                + "\nUploaded to YouTube -by ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)\nJoin now @luminoxpp on Telegram....\n For Exciting Batches at very low cost....."
             )[:5000]
             if not Config.UPLOAD_MODE:
                 privacyStatus = "private"
             else:
-                privacyStatus = Config.UPLOAD_MODE
+                privacyStatus = Config.UPLOAD_MODE    
 
             properties = dict(
                 title=title,
