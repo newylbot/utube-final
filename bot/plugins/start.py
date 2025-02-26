@@ -20,6 +20,6 @@ async def _start(c: UtubeBot, m: Message):
         text=tr.START_MSG.format(m.from_user.first_name),
         quote=True,
         reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Join Project Channel!", url="https://t.me/odbots")]]
+            [[InlineKeyboardButton("Modded and Corrected the codes by @itz_lumino", url="https://t.me/itz_lumino")]]
         ),
     )
