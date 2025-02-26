@@ -16,15 +16,15 @@ A simple Telegram bot to upload videos to YouTube using the [YouTube Data API v3
 
 ### Clone & Virtual Environment
 ```bash
- git clone https://github.com/odysseusmax/utube.git
- cd utube
- python3 -m venv venv
- source venv/bin/activate
+$ git clone https://github.com/odysseusmax/utube.git
+$ cd utube
+$ python3 -m venv venv
+$ source venv/bin/activate
 ```
 
 ### Install Dependencies
 ```bash
- pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 ### Environment Variables
@@ -35,12 +35,27 @@ Set the following variables:
 - `BOT_OWNER` - Your Telegram ID
 - `UPLOAD_MODE` - `private`, `public`, or `unlisted` (default: `private`)
 
+## Setting Environment Variables in VPS (Perticularly)
+To set environment variables only on a VPS, use the following commands:
+```bash
+export API_ID="your_api_id_here"
+export API_HASH="your_api_hash_here"
+export BOT_TOKEN="your_bot_token_here"
+export CLIENT_ID="your_client_id_here"
+export CLIENT_SECRET="your_client_secret_here"
+export BOT_OWNER="your_bot_owner_id_here"
+export SESSION_NAME="your_session_name_here"
+export DEBUG="true"
+export UPLOAD_MODE="unlisted"
+```
+
 ### Running the Bot
 ```bash
- python3 -m bot
+$ python3 -m bot
 ```
 
 If everything is set up correctly, the bot should be running. Use `/start` to check.
+
 
 ## Notes
 - **Daily Upload Limit**: The YouTube API allows ~6 uploads per day due to quota limits.
@@ -48,8 +63,10 @@ If everything is set up correctly, the bot should be running. Use `/start` to ch
 - **Copyright**: Uploading copyrighted content may lead to video removal.
 
 ## Contact
-For support, contact **[@itz_lumino](https://telegram.dog/itz_lumino)**.
+For support, contact **[๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ](https://telegram.dog/itz_lumino)**.
 
 ## License
 Released under [GNU GPL v3.0](LICENSE).
+
+
 
