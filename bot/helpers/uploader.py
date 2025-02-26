@@ -70,11 +70,11 @@ class Uploader:
             
             description = (
     Config.VIDEO_DESCRIPTION
-    + "\n\n📢 **Uploaded to YouTube** 🎥"
-    + "\n🚀 **By:** ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)"
-    + "\n\n💬 **Join Us on Telegram:**"
-    + "\n👉 [@luminoxpp](https://t.me/luminoxpp)"
-    + "\n\n🔥 **Get Exciting Batches at Very Low Cost!** 💰"
+    + "\n\n📢 *Uploaded to YouTube* 🎥"
+    + "\n🚀 *By:* ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)"
+    + "\n\n💬 *Join Us on Telegram:*"
+    + "\n👉 *@luminoxpp*"
+    + "\n\n🔥 *Get Exciting Batches at Very Low Cost!* 💰"
 )[:5000]
             if not Config.UPLOAD_MODE:
                 privacyStatus = "private"
