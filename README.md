@@ -51,7 +51,7 @@ export UPLOAD_MODE="unlisted"
 
 ### 🤖Running the Bot
 ```bash
-$ python3 -m bot
+ python3 -m bot
 ```
 
 ↪️If everything is set up correctly, the bot should be running. Use `/start` to check.
