@@ -98,6 +98,11 @@ class Uploader:
                 f"[{title}](https://youtu.be/{video_id}) uploaded to YouTube under category "
                 f"{categoryId} ({categoryName})"
             )
+             # ✅ Delete the file after successful upload
+            if os.path.exists(self.file):
+                os.remove(self.file)                
+                log.debug(f"Deleted file: {self.file}")
+
         except Exception as e:
             log.error(e, exc_info=True)
             self.status = False
