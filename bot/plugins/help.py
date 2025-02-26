@@ -1,5 +1,5 @@
 from pyrogram import filters as Filters
-from pyrogram.enums import ChatAction  # Import ChatAction if not already imported
+from pyrogram import enums
 from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
@@ -40,7 +40,7 @@ def map_btns(pos):
     & Filters.user(Config.AUTH_USERS)
 )
 async def _help(c: UtubeBot, m: Message):
-    await m.reply_chat_action(ChatAction.TYPING)  # ✅ Correct
+    await m.reply_chat_action(enums.ChatAction.TYPING)  # ✅ Correct
     await m.reply_text(
         text=tr.HELP_MSG[1],
         reply_markup=InlineKeyboardMarkup(map_btns(1)),
