@@ -39,17 +39,19 @@ async def _upload(c: UtubeBot, m: Message):
 
     message = m.reply_to_message
 
-    if not message.media or not valid_media(message):
+    if not message.media:
         await m.reply_text(tr.NOT_A_MEDIA_MSG, True)
         return
 
-    # ✅ Remove daily quota check for unlimited uploads
-    # if c.counter >= 6:
-    #     await m.reply_text(tr.DAILY_QOUTA_REACHED, True)
-    #     return
+    if not valid_media(message):
+        await m.reply_text(tr.NOT_A_VALID_MEDIA_MSG, True)
+        return
+
+    if c.counter >= 6:
+        await m.reply_text(tr.DAILY_QOUTA_REACHED, True)
 
     snt = await m.reply_text(tr.PROCESSING, True)
-
+    c.counter += 1
     download_id = get_download_id(c.download_controller)
     c.download_controller[download_id] = True
 
@@ -59,25 +61,30 @@ async def _upload(c: UtubeBot, m: Message):
     c.download_controller.pop(download_id)
 
     if not status:
+        c.counter -= 1
+        c.counter = max(0, c.counter)
         await snt.edit_text(text=file, parse_mode="markdown")
         return
 
     try:
-        await snt.edit_text("✅ Downloaded! Now uploading to YouTube...")
+        await snt.edit_text("Downloaded to local, Now starting to upload to youtube...")
     except Exception as e:
         log.warning(e, exc_info=True)
+        pass
 
     title = " ".join(m.command[1:])
     upload = Uploader(file, title)
     status, link = await upload.start(progress, snt)
     log.debug(f"{status}: {link}")
-
+    if not status:
+        c.counter -= 1
+        c.counter = max(0, c.counter)
     await snt.edit_text(text=link, parse_mode=enums.ParseMode.MARKDOWN)
 
 
 def get_download_id(storage: dict) -> str:
     while True:
-        download_id = "".join([random.choice(string.ascii_letters) for _ in range(3)])
+        download_id = "".join([random.choice(string.ascii_letters) for i in range(3)])
         if download_id not in storage:
             break
     return download_id
@@ -100,8 +107,8 @@ def human_bytes(
     num: Union[int, float], split: bool = False
 ) -> Union[str, Tuple[int, str]]:
     base = 1024.0
-    suffix_list = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-    for unit in suffix_list:
+    sufix_list = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    for unit in sufix_list:
         if abs(num) < base:
             if split:
                 return round(num, 2), unit
