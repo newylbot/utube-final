@@ -7,19 +7,18 @@ from typing import Optional, Tuple
 from ..youtube import GoogleAuth, YouTube
 from ..config import Config
 
-
 log = logging.getLogger(__name__)
 
-
 class Uploader:
-    def __init__(self, file: str, title: Optional[str] = None):
+    def __init__(self, file: str, title: Optional[str] = None, thumbnail: Optional[str] = None):
         self.file = file
         self.title = title
+        self.thumbnail = thumbnail  # Store thumbnail path
         self.video_category = {
             1: "Film & Animation",
             2: "Autos & Vehicles",
             10: "Music",
-            15: "Pets & Animal",
+            15: "Pets & Animals",
             17: "Sports",
             19: "Travel & Events",
             20: "Gaming",
@@ -55,6 +54,7 @@ class Uploader:
 
             auth.LoadCredentialsFile(Config.CRED_FILE)
             google = await loop.run_in_executor(None, auth.authorize)
+            
             if Config.VIDEO_CATEGORY and Config.VIDEO_CATEGORY in self.video_category:
                 categoryId = Config.VIDEO_CATEGORY
             else:
@@ -63,19 +63,20 @@ class Uploader:
             categoryName = self.video_category[categoryId]
             title = self.title if self.title else os.path.basename(self.file)
             title = (
-    (Config.VIDEO_TITLE_PREFIX + "🔥 " + title + " 🚀" + Config.VIDEO_TITLE_SUFFIX)
-    .replace("<", "")
-    .replace(">", "")[:100]
-)
+                (Config.VIDEO_TITLE_PREFIX + "🔥 " + title + " 🚀" + Config.VIDEO_TITLE_SUFFIX)
+                .replace("<", "")
+                .replace(">", "")[:100]
+            )
             
             description = (
-    Config.VIDEO_DESCRIPTION
-    + "\n\n📢 *Uploaded to YouTube* 🎥"
-    + "\n🚀 *By:* ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)"
-    + "\n\n💬 *Join Us on Telegram:*"
-    + "\n👉 *@luminoxpp*"
-    + "\n\n🔥 *Get Exciting Batches at Very Low Cost!* 💰"
-)[:5000]
+                Config.VIDEO_DESCRIPTION
+                + "\n\n📢 *Uploaded to YouTube* 🎥"
+                + "\n🚀 *By:* ๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ (@itz_lumino)"
+                + "\n\n💬 *Join Us on Telegram:*"
+                + "\n👉 *@luminoxpp*"
+                + "\n\n🔥 *Get Exciting Batches at Very Low Cost!* 💰"
+            )[:5000]
+            
             if not Config.UPLOAD_MODE:
                 privacyStatus = "private"
             else:
@@ -88,22 +89,27 @@ class Uploader:
                 privacyStatus=privacyStatus,
             )
 
-            log.debug(f"payload for {self.file} : {properties}")
+            log.debug(f"Payload for {self.file} : {properties}")
 
             youtube = YouTube(google)
             r = await loop.run_in_executor(
                 None, youtube.upload_video, self.file, properties
             )
 
-            log.debug(r)
-
             video_id = r["id"]
+            
+            # Upload thumbnail if provided
+            if self.thumbnail and os.path.exists(self.thumbnail):
+                await loop.run_in_executor(None, youtube.upload_thumbnail, video_id, self.thumbnail)
+                log.debug(f"Thumbnail uploaded: {self.thumbnail}")
+
             self.status = True
             self.message = (
                 f"[{title}](https://youtu.be/{video_id}) uploaded to YouTube under category "
                 f"{categoryId} ({categoryName})"
             )
-             # ✅ Delete the file after successful upload
+
+            # ✅ Delete the file after successful upload
             if os.path.exists(self.file):
                 os.remove(self.file)                
                 log.debug(f"Deleted file: {self.file}")
@@ -111,4 +117,4 @@ class Uploader:
         except Exception as e:
             log.error(e, exc_info=True)
             self.status = False
-            self.message = f"Error occuered during upload.\nError details: {e}"
+            self.message = f"Error occurred during upload.\nError details: {e}"
