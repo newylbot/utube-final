@@ -24,7 +24,7 @@ class Config:
     
     #_____WATERMARK-SECTION_____#
     # Enable watermarking (True = ON, False = OFF)
-    # Currently in Beta Stage... Might Not work Properly.... This will add permanent watermark on your video....  Use with Caution......
+    # Currently in Beta Stage... Might Not work Properly.... This will add permanent watermark on your video....  Use with at your OWN RISK......
     WATERMARK_ENABLED = False
     # Path to watermark image
     WATERMARK_IMAGE = "bot/t.png"
