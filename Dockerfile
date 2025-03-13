@@ -7,7 +7,10 @@ WORKDIR /app
 # Copy the current directory contents into the container
 COPY . /app
 
-# Install dependencies
+# Install system dependencies (FFmpeg)
+RUN apt-get update && apt-get install -y ffmpeg
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run the bot directly without using an env file
