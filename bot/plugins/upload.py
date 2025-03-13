@@ -9,7 +9,7 @@ from typing import Tuple, Union
 
 from pyrogram import StopTransmission
 from pyrogram import filters as Filters
-from pyrogram import enums  # Add this at the top if not already present
+from pyrogram import enums
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
 from ..translations import Messages as tr
@@ -18,9 +18,7 @@ from ..helpers.uploader import Uploader
 from ..config import Config
 from ..utubebot import UtubeBot
 
-
 log = logging.getLogger(__name__)
-
 
 @UtubeBot.on_message(
     Filters.private
@@ -67,12 +65,12 @@ async def _upload(c: UtubeBot, m: Message):
         return
 
     try:
-        await snt.edit_text("Downloaded to local, Now starting to upload to youtube...")
+        await snt.edit_text("📥 Downloaded to local..\nNow starting to upload to YouTube... 📤")
     except Exception as e:
         log.warning(e, exc_info=True)
         pass
 
-    title = " ".join(m.command[1:])
+    title = " - ".join(filter(None, [" ".join(m.command[1:]), message.caption]))
     upload = Uploader(file, title)
     status, link = await upload.start(progress, snt)
     log.debug(f"{status}: {link}")
@@ -81,14 +79,12 @@ async def _upload(c: UtubeBot, m: Message):
         c.counter = max(0, c.counter)
     await snt.edit_text(text=link, parse_mode=enums.ParseMode.MARKDOWN)
 
-
 def get_download_id(storage: dict) -> str:
     while True:
         download_id = "".join([random.choice(string.ascii_letters) for i in range(3)])
         if download_id not in storage:
             break
     return download_id
-
 
 def valid_media(media: Message) -> bool:
     if media.video:
@@ -102,7 +98,6 @@ def valid_media(media: Message) -> bool:
     else:
         return False
 
-
 def human_bytes(
     num: Union[int, float], split: bool = False
 ) -> Union[str, Tuple[int, str]]:
@@ -114,7 +109,6 @@ def human_bytes(
                 return round(num, 2), unit
             return f"{round(num, 2)} {unit}"
         num /= base
-
 
 async def progress(
     cur: Union[int, float],
@@ -138,16 +132,22 @@ async def progress(
             tott = human_bytes(tot)
             eta = datetime.timedelta(seconds=int(((tot - cur) / (1024 * 1024)) / speed))
             elapsed = datetime.timedelta(seconds=diff)
-            progress = round((cur * 100) / tot, 2)
-            text = f"{status}\n\n{progress}% done.\n{curr} of {tott}\nSpeed: {speed} {unit}PS"
-            f"\nETA: {eta}\nElapsed: {elapsed}"
+            progress_percent = round((cur * 100) / tot)
+            filled = progress_percent // 10
+            remaining = 10 - filled
+            progress_bar = "".join(["⚫" * filled + "⭕" + "⚪" * remaining])
+            text = (f"📌 **{status}** 📌\n\n"
+                    f"{progress_bar}  ({progress_percent}%)\n\n"
+                    f"📂 **Size:** {curr} of {tott}\n"
+                    f"🚀 **Speed:** {speed} {unit}/s\n"
+                    f"🕐 **ETA:** {eta}\n"
+                    f"⏰ **Elapsed:** {elapsed}")
             await snt.edit_text(
                 text=text,
                 reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Cancel!", f"cncl+{download_id}")]]
+                    [[InlineKeyboardButton("🚫 Stop Upload", f"cncl+{download_id}")]]
                 ),
             )
-
     except Exception as e:
         log.info(e)
         pass
