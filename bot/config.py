@@ -14,7 +14,7 @@ class Config:
     AUTH_USERS = [BOT_OWNER, 123456789]  # Add more user IDs as needed
 
     # Video settings
-    VIDEO_DESCRIPTION = "Your default video description"
+    VIDEO_DESCRIPTION = "" # Your default video description
     VIDEO_CATEGORY = 22  # Default category (change as needed)
     VIDEO_TITLE_PREFIX = "๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ"
     VIDEO_TITLE_SUFFIX = ""
