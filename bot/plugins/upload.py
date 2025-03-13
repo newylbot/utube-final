@@ -71,12 +71,18 @@ async def _upload(c: UtubeBot, m: Message):
         pass
 
     title = " - ".join(filter(None, [" ".join(m.command[1:]), message.caption]))
-    upload = Uploader(file, title)
+
+    # Load default thumbnail from config
+    thumbnail = Config.THUMBNAIL_FILE if os.path.exists(Config.THUMBNAIL_FILE) else None
+
+    upload = Uploader(file, title, thumbnail)
     status, link = await upload.start(progress, snt)
     log.debug(f"{status}: {link}")
+    
     if not status:
         c.counter -= 1
         c.counter = max(0, c.counter)
+
     await snt.edit_text(text=link, parse_mode=enums.ParseMode.MARKDOWN)
 
 def get_download_id(storage: dict) -> str:
