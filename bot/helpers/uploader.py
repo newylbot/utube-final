@@ -6,6 +6,7 @@ from typing import Optional, Tuple
 
 from ..youtube import GoogleAuth, YouTube
 from ..config import Config
+from ..helpers.watermark import Watermark  # ✅ Correct Import
 
 log = logging.getLogger(__name__)
 
@@ -14,6 +15,7 @@ class Uploader:
         self.file = file
         self.title = title
         self.thumbnail = thumbnail  # Store thumbnail path
+        self.watermarked_file = None  # Store path of watermarked video
         self.video_category = {
             1: "Film & Animation",
             2: "Autos & Vehicles",
@@ -54,20 +56,20 @@ class Uploader:
 
             auth.LoadCredentialsFile(Config.CRED_FILE)
             google = await loop.run_in_executor(None, auth.authorize)
-            
-            if Config.VIDEO_CATEGORY and Config.VIDEO_CATEGORY in self.video_category:
-                categoryId = Config.VIDEO_CATEGORY
-            else:
-                categoryId = random.choice(list(self.video_category))
 
+            # Select category
+            categoryId = Config.VIDEO_CATEGORY if Config.VIDEO_CATEGORY in self.video_category else random.choice(list(self.video_category))
             categoryName = self.video_category[categoryId]
+
+            # Set title
             title = self.title if self.title else os.path.basename(self.file)
             title = (
                 (Config.VIDEO_TITLE_PREFIX + "🔥 " + title + " 🚀" + Config.VIDEO_TITLE_SUFFIX)
                 .replace("<", "")
                 .replace(">", "")[:100]
             )
-            
+
+            # Set description
             description = (
                 Config.VIDEO_DESCRIPTION
                 + "\n\n📢 *Uploaded to YouTube* 🎥"
@@ -76,11 +78,9 @@ class Uploader:
                 + "\n👉 *@luminoxpp*"
                 + "\n\n🔥 *Get Exciting Batches at Very Low Cost!* 💰"
             )[:5000]
-            
-            if not Config.UPLOAD_MODE:
-                privacyStatus = "private"
-            else:
-                privacyStatus = Config.UPLOAD_MODE    
+
+            # Set privacy status
+            privacyStatus = Config.UPLOAD_MODE if Config.UPLOAD_MODE else "private"
 
             properties = dict(
                 title=title,
@@ -91,13 +91,24 @@ class Uploader:
 
             log.debug(f"Payload for {self.file} : {properties}")
 
+            # 🔹 **Apply watermark if enabled**
+            if Config.WATERMARK_ENABLED:
+                log.debug("Applying watermark to the video...")
+                wm = Watermark(self.file, Config.WATERMARK_IMAGE)
+                self.watermarked_file = await loop.run_in_executor(None, wm.apply)
+                if self.watermarked_file and self.watermarked_file != self.file:
+                    log.debug(f"Watermark applied: {self.watermarked_file}")
+                else:
+                    log.error("Failed to apply watermark. Proceeding with original video.")
+                    self.watermarked_file = self.file
+            else:
+                self.watermarked_file = self.file
+
             youtube = YouTube(google)
-            r = await loop.run_in_executor(
-                None, youtube.upload_video, self.file, properties
-            )
+            r = await loop.run_in_executor(None, youtube.upload_video, self.watermarked_file, properties)
 
             video_id = r["id"]
-            
+
             # Upload thumbnail if provided
             if self.thumbnail and os.path.exists(self.thumbnail):
                 await loop.run_in_executor(None, youtube.upload_thumbnail, video_id, self.thumbnail)
@@ -109,10 +120,14 @@ class Uploader:
                 f"{categoryId} ({categoryName})"
             )
 
-            # ✅ Delete the file after successful upload
+            # ✅ Delete the processed file after upload
+            if os.path.exists(self.watermarked_file) and self.watermarked_file != self.file:
+                os.remove(self.watermarked_file)
+                log.debug(f"Deleted watermarked file: {self.watermarked_file}")
+
             if os.path.exists(self.file):
-                os.remove(self.file)                
-                log.debug(f"Deleted file: {self.file}")
+                os.remove(self.file)
+                log.debug(f"Deleted original file: {self.file}")
 
         except Exception as e:
             log.error(e, exc_info=True)
