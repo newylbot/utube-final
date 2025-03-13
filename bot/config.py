@@ -18,8 +18,18 @@ class Config:
     VIDEO_CATEGORY = 22  # Default category (change as needed)
     VIDEO_TITLE_PREFIX = "๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ"
     VIDEO_TITLE_SUFFIX = ""
+
     # Default Thumbnail (Optional)
     THUMBNAIL_FILE = "bot/t.png"  # Change to the correct filename
+    
+    #_____WATERMARK-SECTION_____#
+    # Enable watermarking (True = ON, False = OFF)
+    WATERMARK_ENABLED = True
+    # Path to watermark image
+    WATERMARK_IMAGE = "bot/t.png"
+    # Watermark position (topleft, topright, bottomleft, bottomright)
+    WATERMARK_POSITION = "bottomright"
+    
     # Debugging
     DEBUG = True
 
