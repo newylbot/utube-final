@@ -14,17 +14,13 @@ from http.client import (
 
 from apiclient import http, errors, discovery
 
-
 log = logging.getLogger(__name__)
-
 
 class MaxRetryExceeded(Exception):
     pass
 
-
 class UploadFailed(Exception):
     pass
-
 
 class YouTube:
 
@@ -55,6 +51,7 @@ class YouTube:
     def upload_video(
         self, video: str, properties: dict, progress: callable = None, *args
     ) -> dict:
+        """Uploads a video to YouTube."""
         self.progress = progress
         self.progress_args = args
         self.video = video
@@ -82,6 +79,7 @@ class YouTube:
         return self.response
 
     def _resumable_upload(self) -> dict:
+        """Handles resumable video uploads to YouTube."""
         response = None
         while response is None:
             try:
@@ -121,7 +119,21 @@ class YouTube:
                 )
                 time.sleep(sleep_seconds)
 
+    def upload_thumbnail(self, video_id: str, thumbnail_path: str) -> dict:
+        """Uploads a thumbnail for the given video ID."""
+        try:
+            youtube_thumbnails = self.youtube.thumbnails().set(
+                videoId=video_id,
+                media_body=http.MediaFileUpload(thumbnail_path)
+            )
+            response = youtube_thumbnails.execute()
+            log.debug(f"Thumbnail uploaded successfully for video {video_id}")
+            return response
+        except errors.HttpError as e:
+            log.error(f"Failed to upload thumbnail: {e}")
+            return {"error": str(e)}
 
 def print_response(response: dict) -> None:
+    """Prints the API response."""
     for key, value in response.items():
         print(key, " : ", value, "\n\n")
