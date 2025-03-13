@@ -1,40 +1,69 @@
-# 🚀**YouTube Uploader Bot**
+# 🚀 **YouTube Uploader Bot**  
 
-A simple Telegram bot to upload videos to YouTube using the [YouTube Data API v3](https://developers.google.com/youtube/v3/). Developed in Python3.
+A simple Telegram bot to upload videos to YouTube using the [YouTube Data API v3](https://developers.google.com/youtube/v3/). Developed in Python3.  
 
-## ⚡Features
+## ⚡ **Features**  
 
-- Upload videos directly from Telegram to YouTube......
-- Customize video title, description, and privacy settings.....
-- Supports multiple authorized users....
+- 📤 Upload videos directly from Telegram to YouTube  
+- 🎭 **Watermark Support** (Custom image, adjustable size, position, and transparency)  
+- 📝 Customize **video title, description, privacy settings**  
+- 🔗 Supports **multiple authorized users**  
+- 🖼️ **Thumbnail Upload** (Optional)  
+- 📂 **Batch Upload** (Multiple videos at once)  
+- ⏬ **Resumable Uploads** (Auto-resume if interrupted)  
 
-## ✅Requirements
+## ✅ **Requirements**  
 
-- Python 3.6+
-- Telegram Bot API credentials
-- Google API credentials (YouTube Data API v3)
-- Docker (optional, for containerized deployment)
+- Python 3.6+  
+- Telegram Bot API credentials  
+- Google API credentials (YouTube Data API v3)  
+- FFmpeg (for watermarking and video processing)  
+- Docker (optional, for containerized deployment)  
 
-## 🧪Setup
+---
 
-### Clone & Virtual Environment (For Local Setup)
+## ⚙️ **Installation & Setup**  
 
-```bash
-git clone https://github.com/newylbot/utube-final.git utube
-cd utube
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### ⏬Install Dependencies
+### ⏬ **Clone & Virtual Environment (For Local Setup)**  
 
 ```bash
-pip3 install -r requirements.txt
-```
+git clone https://github.com/newylbot/utube-final.git utube  
+cd utube  
+python3 -m venv venv  
+source venv/bin/activate  
+```  
 
-### 📌Configuration
+### 📌 **Install Dependencies**  
 
-Instead of using an `.env` file, all configuration values are now managed in `config.py`. Open `config.py` and update the necessary fields:
+```bash
+pip3 install -r requirements.txt  
+```  
+
+### 🔹 **Installing FFmpeg**  
+
+#### **Linux (Ubuntu/Debian)**  
+```bash
+sudo apt update && sudo apt install ffmpeg -y
+```  
+
+#### **Windows**  
+1. Download FFmpeg from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)  
+2. Extract the files and add the `bin` folder to your system PATH.  
+3. Verify installation:  
+   ```bash
+   ffmpeg -version
+   ```  
+
+#### **Mac (Homebrew)**  
+```bash
+brew install ffmpeg
+```  
+
+---
+
+### 📌 **Configuration**  
+
+Instead of using an `.env` file, all configuration values are now managed in `config.py`. Open `config.py` and update the necessary fields:  
 
 ```python
 class Config:
@@ -53,70 +82,88 @@ class Config:
     DEBUG = True
     UPLOAD_MODE = "unlisted"
     CRED_FILE = "auth_token.txt"
-```
+    WATERMARK_ENABLED = True
+    WATERMARK_IMAGE = "watermark.png"
+    WATERMARK_POSITION = "topright"  # Options: topleft, topright, bottomleft, bottomright
+```  
 
-## 🔗 Getting Google API Credentials (Client ID & Secret)
+---
+
+## 🔗 **Getting Google API Credentials (Client ID & Secret)**  
 
 <details>
 <summary>⏩ Click to Expand</summary>
 
-To use the YouTube Data API, you need Google API credentials:
+To use the YouTube Data API, you need Google API credentials:  
 
-1. **Go to the Google Cloud Console**: [GCP Cloud Console](https://console.developers.google.com)
-2. **Create a new project** (or select an existing one).
-3. **Enable the YouTube Data API v3**:
-   - Go to `APIs & Services` > `Library` > Search for `YouTube Data API v3`
-   - Click `Enable`
-4. **Create OAuth 2.0 Credentials**:
-   - Go to `APIs & Services` > `Credentials`
-   - Click `Create Credentials` > `OAuth Client ID`
-   - Choose `Application Type: Web Application`
-   - Set `Authorized Redirect URIs` to `http://localhost`
-   - Click `Create`
-5. **Copy your `Client ID` and `Client Secret`** and add them to `config.py`.
+1. **Go to the Google Cloud Console**: [GCP Cloud Console](https://console.developers.google.com)  
+2. **Create a new project** (or select an existing one).  
+3. **Enable the YouTube Data API v3**:  
+   - Go to `APIs & Services` > `Library` > Search for `YouTube Data API v3`  
+   - Click `Enable`  
+4. **Create OAuth 2.0 Credentials**:  
+   - Go to `APIs & Services` > `Credentials`  
+   - Click `Create Credentials` > `OAuth Client ID`  
+   - Choose `Application Type: Web Application`  
+   - Set `Authorized Redirect URIs` to `http://localhost`  
+   - Click `Create`  
+5. **Copy your `Client ID` and `Client Secret`** and add them to `config.py`.  
 
-</details>
+</details>  
 
-### 🤖 Running the Bot Locally
+---
+
+### 🤖 **Running the Bot Locally**  
 
 ```bash
 python3 -m bot
-```
+```  
 
-↪️ If everything is set up correctly, the bot should be running. Use `/start` to check.
+↪️ If everything is set up correctly, the bot should be running. Use `/start` to check.  
 
 ---
 
-## 💪 Docker Setup (Recommended)
+## 💪 **Docker Setup (Recommended)**  
 
-If you want to run the bot using Docker, follow these steps:
+If you want to run the bot using Docker, follow these steps:  
 
-### **1️⃣ Build and Run the Docker Container**
+### **1️⃣ Build and Run the Docker Container**  
 
-1. **Ensure `config.py` is updated with your credentials.**
-2. **Build the Docker Image**
+1. **Ensure `config.py` is updated with your credentials.**  
+2. **Build the Docker Image**  
    ```bash
    docker build -t youtube-uploader-bot .
-   ```
-3. **Run the Container**
+   ```  
+3. **Run the Container**  
    ```bash
    docker run -d --name yt-bot youtube-uploader-bot
-   ```
+   ```  
 
-✅ No need to specify `--env-file` manually! The bot now reads configurations directly from `config.py`.
+✅ No need to specify `--env-file` manually! The bot now reads configurations directly from `config.py`.  
 
 ---
 
-## 🔔Notes
+## 🔔 **Notes**  
 
-- **Daily Upload Limit**: The YouTube API allows ~6 uploads per day due to quota limits.
-- **Unverified Apps**: Uploaded videos will remain private unless the app is verified by Google.
-- **Copyright**: Uploading copyrighted content may lead to video removal.
+- **Daily Upload Limit**: The YouTube API allows ~6 uploads per day due to quota limits.  
+- **Unverified Apps**: Uploaded videos will remain private unless the app is verified by Google.  
+- **Copyright**: Uploading copyrighted content may lead to video removal.  
 
-## 🤙🏻Contact
+---
 
-For support, contact **[๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ](https://telegram.dog/itz_lumino)**.
+## 🤙🏻 **Contact**  
 
-## 🧪License
+For support, contact **[๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ](https://telegram.dog/itz_lumino)**.  
+
+---
+
+## 🧪 **License**  
 
 Released under [GNU GPL v3.0](LICENSE).
+
+This version includes:  
+✅ FFmpeg installation instructions  
+✅ Updated config parameters (including watermark settings)  
+✅ Improved formatting for better readability  
+
+Let me know if you want any further modifications! 🚀
