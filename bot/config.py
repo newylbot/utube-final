@@ -18,7 +18,8 @@ class Config:
     VIDEO_CATEGORY = 22  # Default category (change as needed)
     VIDEO_TITLE_PREFIX = "๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ"
     VIDEO_TITLE_SUFFIX = ""
-
+    # Default Thumbnail (Optional)
+    THUMBNAIL_FILE = "bot/t.png"  # Change to the correct filename
     # Debugging
     DEBUG = True
 
