@@ -1,49 +1,29 @@
-import os
-
-
 class Config:
+    # Telegram API credentials
+    BOT_TOKEN = "Add your BOT TOKEN here"
+    SESSION_NAME = "Add your BOT USERNAME here" # Without @
+    API_ID = 123456  # Replace with your API ID
+    API_HASH = "ADD your API HASH here"
 
-    BOT_TOKEN = os.environ.get("BOT_TOKEN")
+    # YouTube API credentials
+    CLIENT_ID = "Add your client ID here"
+    CLIENT_SECRET = "Add your client SECRET here"
 
-    SESSION_NAME = os.environ.get("SESSION_NAME", ":memory:")
+    # Bot owner and authorized users
+    BOT_OWNER = 123456789  # Replace with your Telegram user ID
+    AUTH_USERS = [BOT_OWNER, 123456789]  # Add more user IDs as needed
 
-    API_ID = int(os.environ.get("API_ID"))
+    # Video settings
+    VIDEO_DESCRIPTION = "Your default video description"
+    VIDEO_CATEGORY = 22  # Default category (change as needed)
+    VIDEO_TITLE_PREFIX = "๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ"
+    VIDEO_TITLE_SUFFIX = ""
 
-    API_HASH = os.environ.get("API_HASH")
+    # Debugging
+    DEBUG = True
 
-    CLIENT_ID = os.environ.get("CLIENT_ID")
+    # Upload mode (public, private, unlisted)
+    UPLOAD_MODE = "unlisted"
 
-    CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-
-    BOT_OWNER = int(os.environ.get("BOT_OWNER"))
-
-    AUTH_USERS_TEXT = os.environ.get("AUTH_USERS", "")
-
-    AUTH_USERS = [BOT_OWNER, 374321319] + (
-        [int(user.strip()) for user in AUTH_USERS_TEXT.split(",")]
-        if AUTH_USERS_TEXT
-        else []
-    )
-
-    VIDEO_DESCRIPTION = (
-        os.environ.get("VIDEO_DESCRIPTION", "").replace("<", "").replace(">", "")
-    )
-
-    VIDEO_CATEGORY = (
-        int(os.environ.get("VIDEO_CATEGORY")) if os.environ.get("VIDEO_CATEGORY") else 0
-    )
-
-    VIDEO_TITLE_PREFIX = os.environ.get("VIDEO_TITLE_PREFIX", "")
-
-    VIDEO_TITLE_SUFFIX = os.environ.get("VIDEO_TITLE_SUFFIX", "")
-
-    DEBUG = bool(os.environ.get("DEBUG"))
-
-    UPLOAD_MODE = os.environ.get("UPLOAD_MODE") or False
-    if UPLOAD_MODE:
-        if UPLOAD_MODE.lower() in ["private", "public", "unlisted"]:
-            UPLOAD_MODE = UPLOAD_MODE.lower()
-        else:
-            UPLOAD_MODE = False
-
+    # Credential file for YouTube authentication
     CRED_FILE = "auth_token.txt"
