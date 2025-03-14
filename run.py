@@ -10,7 +10,7 @@ first_start = True  # Flag to track if it's the first start or a restart
 
 def send_message(is_restart=False):
     """Send a message to Telegram when the bot starts or restarts."""
-    message = "<b>🤖 Bot Started Fresh....\n🔥Start Uploading...</b>" if not is_restart else "<b>🔄 Bot restarted automatically due to Quota Exceeded.\n\n⌛Wait for 5 to 7 seconds to initialize...\n\n💻Then Start uploading again.....</b>"
+    message = "<b>🤖 Bot Started Fresh....\n\nHit /start and follow the instructions...\n\nIf already done....\n🔥Start Uploading...</b>" if not is_restart else "<b>🔄 Bot restarted automatically due to Quota Exceeded.\n\n⌛Wait for 5 to 7 seconds to initialize...\n\n💻Then Start uploading again.....</b>"
 
     try:
         with Client("supervisor", api_id=Config.API_ID, api_hash=Config.API_HASH, bot_token=Config.BOT_TOKEN) as app:
