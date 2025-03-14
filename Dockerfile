@@ -14,4 +14,4 @@ RUN apt-get update && apt-get install -y ffmpeg
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run the bot directly without using an env file
-CMD ["python3", "-m", "bot"]
+CMD ["python3", "run.py"]
