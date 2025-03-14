@@ -131,7 +131,7 @@ async def progress(
     try:
         diff = int(time.time() - start_time)
 
-        if (int(time.time()) % 5 == 0) or (cur == tot):
+        if (int(time.time()) % 3 == 0) or (cur == tot):
             await asyncio.sleep(1)
             speed, unit = human_bytes(cur / diff, True)
             curr = human_bytes(cur)
@@ -141,9 +141,9 @@ async def progress(
             progress_percent = round((cur * 100) / tot)
             filled = progress_percent // 10
             remaining = 10 - filled
-            progress_bar = "".join(["⚫" * filled + "⭕" + "⚪" * remaining])
+            progress_bar = "☞" + "[" + "◉" * filled + "◯" * remaining + "]"
             text = (f"📌 **{status}** 📌\n\n"
-                    f"{progress_bar}  ({progress_percent}%)\n\n"
+                    f"{progress_bar} {progress_percent}%\n\n"
                     f"📂 **Size:** {curr} of {tott}\n"
                     f"🚀 **Speed:** {speed} {unit}/s\n"
                     f"🕐 **ETA:** {eta}\n"
