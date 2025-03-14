@@ -116,7 +116,7 @@ To use the YouTube Data API, you need Google API credentials:
 ### 🤖 **Running the Bot Locally**  
 
 ```bash
-python3 -m bot
+python3 run.py
 ```  
 
 ↪️ If everything is set up correctly, the bot should be running. Use `/start` to check.  
