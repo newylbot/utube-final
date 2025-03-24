@@ -13,6 +13,8 @@ from http.client import (
 )
 
 from apiclient import http, errors, discovery
+from googleapiclient.errors import HttpError
+from bot.config import Config  # Import Config class
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +53,7 @@ class YouTube:
     def upload_video(
         self, video: str, properties: dict, progress: callable = None, *args
     ) -> dict:
-        """Uploads a video to YouTube."""
+        """Uploads a video to YouTube and adds it to a playlist (if specified)."""
         self.progress = progress
         self.progress_args = args
         self.video = video
@@ -87,6 +89,8 @@ class YouTube:
                 if response is not None:
                     if "id" in response:
                         self.response = response
+                        video_id = response["id"]  # Extract uploaded video ID
+                        self.add_video_to_playlist(video_id)  # Add to playlist
                     else:
                         self.response = None
                         raise UploadFailed(
@@ -118,6 +122,35 @@ class YouTube:
                     "Sleeping {} seconds and then retrying...".format(sleep_seconds)
                 )
                 time.sleep(sleep_seconds)
+
+    def add_video_to_playlist(self, video_id: str):
+        """
+        Adds an uploaded video to a specified YouTube playlist.
+
+        :param video_id: The ID of the uploaded video.
+        """
+        if not Config.PLAYLIST_ID:
+            log.debug("No PLAYLIST_ID specified. Skipping playlist addition.")
+            return
+
+        try:
+            request = self.youtube.playlistItems().insert(
+                part="snippet",
+                body={
+                    "snippet": {
+                        "playlistId": Config.PLAYLIST_ID,
+                        "resourceId": {
+                            "kind": "youtube#video",
+                            "videoId": video_id
+                        }
+                    }
+                }
+            )
+            response = request.execute()
+            log.debug(f"✅ Video {video_id} added to playlist {Config.PLAYLIST_ID}.")
+
+        except HttpError as e:
+            log.error(f"❌ Failed to add video to playlist: {e}")
 
     def upload_thumbnail(self, video_id: str, thumbnail_path: str) -> dict:
         """Uploads a thumbnail for the given video ID."""
