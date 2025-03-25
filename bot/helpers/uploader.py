@@ -61,13 +61,30 @@ class Uploader:
             categoryId = Config.VIDEO_CATEGORY if Config.VIDEO_CATEGORY in self.video_category else random.choice(list(self.video_category))
             categoryName = self.video_category[categoryId]
 
-            # Set title
+            # ✅ Fix: Title formatting with correct truncation logic
+            prefix = Config.VIDEO_TITLE_PREFIX + "🔥 "
+            suffix = " 🚀" + Config.VIDEO_TITLE_SUFFIX
+            max_length = 100  # Maximum allowed title length
+
+            # Get base title
             title = self.title if self.title else os.path.basename(self.file)
-            title = (
-                (Config.VIDEO_TITLE_PREFIX + "🔥 " + title + " 🚀" + Config.VIDEO_TITLE_SUFFIX)
-                .replace("<", "")
-                .replace(">", "")[:100]
-            )
+
+            # Calculate available space for the actual title
+            available_space = max_length - len(prefix) - len(suffix)
+
+            # Ensure the main title fits within the available space
+            if available_space > 0:
+                title = title[:available_space]  # Truncate only the title if needed
+            else:
+                title = ""  # If no space left, keep only prefix & suffix
+
+            # Construct final title
+            title = f"{prefix}{title}{suffix}"
+
+            # Remove invalid characters
+            title = title.replace("<", "").replace(">", "")
+
+            log.debug(f"Final Video Title: {title}")  # Debugging output
 
             # Set description
             description = (
