@@ -132,11 +132,11 @@ If you want to run the bot using Docker, follow these steps:
 1. **Ensure `config.py` is updated with your credentials.**  
 2. **Build the Docker Image**  
    ```bash
-   docker build -t youtube-uploader-bot .
+   docker build -t uptube .
    ```  
 3. **Run the Container**  
    ```bash
-   docker run -d --name yt-bot youtube-uploader-bot
+   docker run -d --name yt-bot uptube
    ```  
 
 ✅ No need to specify `--env-file` manually! The bot now reads configurations directly from `config.py`.  
