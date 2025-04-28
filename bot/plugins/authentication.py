@@ -1,4 +1,5 @@
 import logging
+import os
 
 from pyrogram import filters as Filters
 from pyrogram.types import Message
@@ -54,7 +55,7 @@ async def _auth(c: UtubeBot, m: Message) -> None:
 @UtubeBot.on_message(
     Filters.private
     & Filters.incoming
-    & Filters.command(["save_auth_data", "sad"])  # Supports both
+    & Filters.command(["save_auth_data", "sad"])
     & Filters.reply
     & Filters.user(Config.AUTH_USERS)
 )
@@ -73,3 +74,25 @@ async def _save_auth_data(c: UtubeBot, m: Message) -> None:
     except Exception as e:
         log.error(e, exc_info=True)
         await m.reply_text(tr.AUTH_FAILED_MSG.format(e), True)
+
+
+@UtubeBot.on_message(
+    Filters.private
+    & Filters.incoming
+    & Filters.command(["logout", "lo"])
+    & Filters.user(Config.AUTH_USERS)
+)
+async def _logout(c: UtubeBot, m: Message) -> None:
+    token_file = "auth_token.txt"  # Since it is at the root of your project
+
+    try:
+        if os.path.exists(token_file):
+            os.remove(token_file)
+            await m.reply_text("✅ Logged out successfully. \n You can now Do /help to login again.....", True)
+            log.debug("auth_token.txt deleted successfully.")
+        else:
+            await m.reply_text("⚠️ No authentication token found. You are already logged out. \n Do /help to re-login again.....", True)
+            log.debug("Logout attempted but auth_token.txt not found.")
+    except Exception as e:
+        log.error(e, exc_info=True)
+        await m.reply_text(f"❌ Failed to logout due to error: {e}", True)
