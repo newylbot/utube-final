@@ -4,6 +4,7 @@ class Config:
     SESSION_NAME = "" # Without @ Add Your bot Username
     API_ID = 123456  # Replace with your API ID
     API_HASH = "" # Add your API Hash Here
+    MONGO_URL = ""  # Add your url here 
 
     # YouTube API credentials
     CLIENT_ID = "" # Add your Client ID here
@@ -16,14 +17,12 @@ class Config:
     # Video settings
     VIDEO_DESCRIPTION = "" # Your default video description
     VIDEO_CATEGORY = 27  # Default category (change as needed)
-    VIDEO_TITLE_PREFIX = ""
-    VIDEO_TITLE_SUFFIX = " |-๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ"
 
     # Default Thumbnail (Optional)
     THUMBNAIL_FILE = "bot/t.png"  # Change to the correct filename
     
-    # Add Playlist ID here to add your Videos in a Specific Playlist
-    PLAYLIST_ID = "" # Add your Playlist ID here
+    
+    PLAYLIST_ID = "" # Just Leave Blank
 
     YOUTUBE_API_SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
