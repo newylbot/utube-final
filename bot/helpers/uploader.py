@@ -6,7 +6,8 @@ from typing import Optional, Tuple
 
 from ..youtube import GoogleAuth, YouTube
 from ..config import Config
-from ..helpers.watermark import Watermark  # ✅ Correct Import
+from ..helpers.watermark import Watermark
+from ..database import Database  # ✅ Import MongoDB handler
 
 log = logging.getLogger(__name__)
 
@@ -14,8 +15,9 @@ class Uploader:
     def __init__(self, file: str, title: Optional[str] = None, thumbnail: Optional[str] = None):
         self.file = file
         self.title = title
-        self.thumbnail = thumbnail  # Store thumbnail path
-        self.watermarked_file = None  # Store path of watermarked video
+        self.thumbnail = thumbnail
+        self.watermarked_file = None
+        self.db = Database()  # ✅ Initialize database connection
         self.video_category = {
             1: "Film & Animation",
             2: "Autos & Vehicles",
@@ -37,15 +39,12 @@ class Uploader:
     async def start(self, progress: callable = None, *args) -> Tuple[bool, str]:
         self.progress = progress
         self.args = args
-
         await self._upload()
-
         return self.status, self.message
 
     async def _upload(self) -> None:
         try:
             loop = asyncio.get_running_loop()
-
             auth = GoogleAuth(Config.CLIENT_ID, Config.CLIENT_SECRET)
 
             if not os.path.isfile(Config.CRED_FILE):
@@ -61,32 +60,27 @@ class Uploader:
             categoryId = Config.VIDEO_CATEGORY if Config.VIDEO_CATEGORY in self.video_category else random.choice(list(self.video_category))
             categoryName = self.video_category[categoryId]
 
-            # ✅ Fix: Title formatting with correct truncation logic
-            prefix = Config.VIDEO_TITLE_PREFIX + "🔥 "
-            suffix = " 🚀" + Config.VIDEO_TITLE_SUFFIX
-            max_length = 100  # Maximum allowed title length
+            # ✅ Load dynamic settings from MongoDB
+            settings = self.db.get_settings()
+            prefix = settings.get('video_title_prefix', '') + "🔥 "
+            suffix = " 🚀" + settings.get('video_title_suffix', '')
+            playlist_id = settings.get('playlist_id', '')
 
-            # Get base title
+            max_length = 100
+
             title = self.title if self.title else os.path.basename(self.file)
 
-            # Calculate available space for the actual title
             available_space = max_length - len(prefix) - len(suffix)
-
-            # Ensure the main title fits within the available space
             if available_space > 0:
-                title = title[:available_space]  # Truncate only the title if needed
+                title = title[:available_space]
             else:
-                title = ""  # If no space left, keep only prefix & suffix
+                title = ""
 
-            # Construct final title
             title = f"{prefix}{title}{suffix}"
-
-            # Remove invalid characters
             title = title.replace("<", "").replace(">", "")
 
-            log.debug(f"Final Video Title: {title}")  # Debugging output
+            log.debug(f"Final Video Title: {title}")
 
-            # Set description
             description = (
                 Config.VIDEO_DESCRIPTION
                 + "\n\n📢 *Uploaded to YouTube* 🎥"
@@ -96,7 +90,6 @@ class Uploader:
                 + "\n\n🔥 *Get Exciting Batches at Very Low Cost!* 💰"
             )[:5000]
 
-            # Set privacy status
             privacyStatus = Config.UPLOAD_MODE if Config.UPLOAD_MODE else "private"
 
             properties = dict(
@@ -106,9 +99,8 @@ class Uploader:
                 privacyStatus=privacyStatus,
             )
 
-            log.debug(f"Payload for {self.file} : {properties}")
+            log.debug(f"Payload for {self.file}: {properties}")
 
-            # 🔹 **Apply watermark if enabled**
             if Config.WATERMARK_ENABLED:
                 log.debug("Applying watermark to the video...")
                 wm = Watermark(self.file, Config.WATERMARK_IMAGE)
@@ -122,14 +114,16 @@ class Uploader:
                 self.watermarked_file = self.file
 
             youtube = YouTube(google)
-            r = await loop.run_in_executor(None, youtube.upload_video, self.watermarked_file, properties)
+            upload_response = await loop.run_in_executor(None, youtube.upload_video, self.watermarked_file, properties)
+            video_id = upload_response["id"]
 
-            video_id = r["id"]
-
-            # Upload thumbnail if provided
             if self.thumbnail and os.path.exists(self.thumbnail):
                 await loop.run_in_executor(None, youtube.upload_thumbnail, video_id, self.thumbnail)
                 log.debug(f"Thumbnail uploaded: {self.thumbnail}")
+
+            if playlist_id:
+                await loop.run_in_executor(None, youtube.add_video_to_playlist, playlist_id, video_id)
+                log.debug(f"Added video {video_id} to playlist {playlist_id}")
 
             self.status = True
             self.message = (
@@ -137,7 +131,6 @@ class Uploader:
                 f"{categoryId} ({categoryName})"
             )
 
-            # ✅ Delete the processed file after upload
             if os.path.exists(self.watermarked_file) and self.watermarked_file != self.file:
                 os.remove(self.watermarked_file)
                 log.debug(f"Deleted watermarked file: {self.watermarked_file}")
