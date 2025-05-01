@@ -75,7 +75,7 @@ class UtubeBot(Client):
         async def reshow(client, message):
             # Clear stored prefix, suffix, and playlist ID
             self.db.update_setting("video_title_prefix", "")
-            self.db.update_setting("video_title_suffix", "")
+            self.db.update_setting("video_title_suffix", "")  # You can remove this if don't wanna change the Suffix 
             self.db.update_setting("playlist_id", "")
             await message.reply(
                 "✅ All settings have been cleared (prefix, suffix, playlist ID).",
