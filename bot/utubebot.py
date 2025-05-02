@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 from .config import Config
-from bot.database import Database
+from bot.database import Database  # Import the new SQLite-based Database class
 
 class UtubeBot(Client):
     def __init__(self):
@@ -15,7 +15,7 @@ class UtubeBot(Client):
         self.DOWNLOAD_WORKERS = 6
         self.counter = 0
         self.download_controller = {}
-        self.db = Database()  # Initialize MongoDB connection
+        self.db = Database()  # Initialize SQLite database connection
         self.add_dynamic_commands()  # Register commands
 
     def add_dynamic_commands(self):
@@ -29,7 +29,7 @@ class UtubeBot(Client):
                 )
                 return
             prefix = message.text.split(" ", 1)[1]
-            self.db.update_setting("video_title_prefix", prefix)
+            self.db.update_setting("video_title_prefix", prefix)  # Update with SQLite
             await message.reply(f"✅ Prefix updated to:\n`{prefix}`", quote=True)
 
         # Set Suffix Command
@@ -42,7 +42,7 @@ class UtubeBot(Client):
                 )
                 return
             suffix = message.text.split(" ", 1)[1]
-            self.db.update_setting("video_title_suffix", suffix)
+            self.db.update_setting("video_title_suffix", suffix)  # Update with SQLite
             await message.reply(f"✅ Suffix updated to:\n`{suffix}`", quote=True)
 
         # Set Playlist ID Command
@@ -55,13 +55,13 @@ class UtubeBot(Client):
                 )
                 return
             playlist_id = message.text.split(" ", 1)[1]
-            self.db.update_setting("playlist_id", playlist_id)
+            self.db.update_setting("playlist_id", playlist_id)  # Update with SQLite
             await message.reply(f"✅ Playlist ID updated to:\n`{playlist_id}`", quote=True)
 
         # Show Current Settings Command
         @self.on_message(filters.command(["showsettings", "shows"]) & filters.user(Config.BOT_OWNER))
         async def show_settings(client, message):
-            settings = self.db.get_settings()
+            settings = self.db.get_settings()  # Get settings from SQLite
             reply = (
                 "**Current Settings:**\n\n"
                 f"**Prefix:** `{settings.get('video_title_prefix', '')}`\n"
@@ -75,7 +75,7 @@ class UtubeBot(Client):
         async def reshow(client, message):
             # Clear stored prefix, suffix, and playlist ID
             self.db.update_setting("video_title_prefix", "")
-            self.db.update_setting("video_title_suffix", "")  # You can remove this if don't wanna change the Suffix 
+            self.db.update_setting("video_title_suffix", "")  # You can remove this if you don't want to change the Suffix 
             self.db.update_setting("playlist_id", "")
             await message.reply(
                 "✅ All settings have been cleared (prefix, suffix, playlist ID).",
