@@ -4,7 +4,6 @@ class Config:
     SESSION_NAME = "" # Without @ Add Your bot Username
     API_ID = 123456  # Replace with your API ID
     API_HASH = "" # Add your API Hash Here
-    MONGO_URL = ""  # Add your url here 
 
     # YouTube API credentials
     CLIENT_ID = "" # Add your Client ID here
@@ -49,3 +48,5 @@ class Config:
     UPLOAD_MODE = "unlisted"
     # Credential file for YouTube authentication
     CRED_FILE = "auth_token.txt"
+    # SQLite Database
+    SQLITE_DB_PATH = "bot_config.db"  # Path to SQLite database file
