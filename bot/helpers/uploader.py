@@ -7,7 +7,7 @@ from typing import Optional, Tuple
 from ..youtube import GoogleAuth, YouTube
 from ..config import Config
 from ..helpers.watermark import Watermark
-from ..database import Database  # ✅ Import MongoDB handler
+from ..database import Database  # Import the SQLite-based Database class
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class Uploader:
         self.title = title
         self.thumbnail = thumbnail
         self.watermarked_file = None
-        self.db = Database()  # ✅ Initialize database connection
+        self.db = Database()  # Initialize SQLite database connection
         self.video_category = {
             1: "Film & Animation",
             2: "Autos & Vehicles",
@@ -60,7 +60,7 @@ class Uploader:
             categoryId = Config.VIDEO_CATEGORY if Config.VIDEO_CATEGORY in self.video_category else random.choice(list(self.video_category))
             categoryName = self.video_category[categoryId]
 
-            # ✅ Load dynamic settings from MongoDB
+            # Load dynamic settings from SQLite
             settings = self.db.get_settings()
             prefix = settings.get('video_title_prefix', '') + "🔥 "
             suffix = " 🚀" + settings.get('video_title_suffix', '')
