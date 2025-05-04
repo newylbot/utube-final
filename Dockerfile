@@ -17,5 +17,5 @@ COPY . .
 # Expose port for FastAPI (needed for some platforms like Koyeb)
 EXPOSE 8080
 
-# Run the bot directly with FastAPI and subprocess monitoring
-CMD ["python3", "run.py"]
+# Run the bot directly with unbuffered output and subprocess monitoring
+CMD ["python3", "-u", "run.py"]
