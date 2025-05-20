@@ -150,6 +150,28 @@ class YouTube:
         except HttpError as e:
             log.error(f"❌ Failed to add video to playlist: {e}")
 
+    def create_playlist(
+        self, title: str, description: str = "", privacy_status: str = "private"
+    ) -> str:
+        """Create a new YouTube playlist and return its ID."""
+        try:
+            request = self.youtube.playlists().insert(
+                part="snippet,status",
+                body={
+                    "snippet": {"title": title, "description": description},
+                    "status": {"privacyStatus": privacy_status},
+                },
+            )
+            response = request.execute()
+            playlist_id = response.get("id")
+            log.debug(
+                f"✅ Playlist '{title}' created successfully with ID {playlist_id}"
+            )
+            return playlist_id
+        except HttpError as e:
+            log.error(f"❌ Failed to create playlist: {e}")
+            raise
+
     def upload_thumbnail(self, video_id: str, thumbnail_path: str) -> dict:
         """Uploads a thumbnail for the given video ID."""
         try:
