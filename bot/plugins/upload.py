@@ -9,7 +9,7 @@ from typing import Tuple, Union
 
 from pyrogram import StopTransmission
 from pyrogram import filters as Filters
-from pyrogram import enums
+from pyrogram.enums import ParseMode
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
 from ..translations import Messages as tr
@@ -83,7 +83,7 @@ async def _upload(c: UtubeBot, m: Message):
         c.counter -= 1
         c.counter = max(0, c.counter)
 
-    await snt.edit_text(text=link, parse_mode=enums.ParseMode.MARKDOWN)
+    await snt.edit_text(text=link, parse_mode=ParseMode.MARKDOWN)
 
 def get_download_id(storage: dict) -> str:
     while True:
