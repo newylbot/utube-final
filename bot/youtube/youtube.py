@@ -151,7 +151,7 @@ class YouTube:
             log.error(f"❌ Failed to add video to playlist: {e}")
 
     def create_playlist(
-        self, title: str, description: str = "", privacy_status: str = "private"
+        self, title: str, description: str = "", privacy_status: str = "unlisted"
     ) -> str:
         """Create a new YouTube playlist and return its ID."""
         try:
