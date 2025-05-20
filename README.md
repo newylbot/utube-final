@@ -9,8 +9,9 @@ A simple Telegram bot to upload videos to YouTube using the [YouTube Data API v3
 - 📝 Customize **video title, description, privacy settings**  
 - 🔗 Supports **multiple authorized users**  
 - 🖼️ **Thumbnail Upload** (Optional)  
-- 📂 **Batch Upload** (Multiple videos at once)  
-- ⏬ **Resumable Uploads** (Auto-resume if interrupted)  
+- 📂 **Batch Upload** (Multiple videos at once)
+- ⏬ **Resumable Uploads** (Auto-resume if interrupted)
+- 📋 **Create YouTube playlists** directly from Telegram
 
 ## ✅ **Requirements**  
 

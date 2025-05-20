@@ -1,6 +1,10 @@
+import os
+import asyncio
 from pyrogram import Client, filters
 from .config import Config
 from bot.database import Database  # Import the new SQLite-based Database class
+from bot.youtube import GoogleAuth, YouTube
+from bot.translations import Messages as tr
 
 class UtubeBot(Client):
     def __init__(self):
@@ -57,6 +61,35 @@ class UtubeBot(Client):
             playlist_id = message.text.split(" ", 1)[1]
             self.db.update_setting("playlist_id", playlist_id)  # Update with SQLite
             await message.reply(f"✅ Playlist ID updated to:\n`{playlist_id}`", quote=True)
+
+        # Create Playlist Command
+        @self.on_message(filters.command(["createplaylist", "cp"]) & filters.user(Config.BOT_OWNER))
+        async def create_playlist_cmd(client, message):
+            if not os.path.exists(Config.CRED_FILE):
+                await message.reply(tr.NOT_AUTHENTICATED_MSG, quote=True)
+                return
+            if len(message.command) < 2:
+                await message.reply(
+                    "Usage: `/createplaylist Playlist Name` or `/cp Playlist Name`",
+                    quote=True,
+                )
+                return
+
+            title = message.text.split(" ", 1)[1]
+            loop = asyncio.get_running_loop()
+            try:
+                auth = GoogleAuth(Config.CLIENT_ID, Config.CLIENT_SECRET)
+                auth.LoadCredentialsFile(Config.CRED_FILE)
+                google = await loop.run_in_executor(None, auth.authorize)
+                youtube = YouTube(google)
+                playlist_id = await loop.run_in_executor(None, youtube.create_playlist, title)
+                self.db.update_setting("playlist_id", playlist_id)
+                await message.reply(
+                    f"✅ Playlist `{title}` created with ID `{playlist_id}` and set as default.",
+                    quote=True,
+                )
+            except Exception as e:
+                await message.reply(f"❌ Failed to create playlist: {e}", quote=True)
 
         # Show Current Settings Command
         @self.on_message(filters.command(["showsettings", "shows"]) & filters.user(Config.BOT_OWNER))
