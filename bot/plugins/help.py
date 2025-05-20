@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram import enums
+from pyrogram.enums import ChatAction
 from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
@@ -25,7 +25,7 @@ async def close_buttons(q: CallbackQuery):
     & filters.user(Config.AUTH_USERS)
 )
 async def _help(c: UtubeBot, m: Message):
-    await m.reply_chat_action(enums.ChatAction.TYPING)
+    await m.reply_chat_action(ChatAction.TYPING)
 
     help_text = (
         f"📌 **How I Work:**\n"
@@ -34,7 +34,12 @@ async def _help(c: UtubeBot, m: Message):
         "3️⃣ **Reply** `/upload` or `/u` to upload. You can also add a title after the command.\n"
         "4️⃣ I **process & upload** the video to YouTube. 🚀\n"
         "5️⃣ You get the **YouTube link** after the upload. ✅\n"
-        "6️⃣ Use `/createplaylist` or `/cp` to create a playlist. Choose privacy, type a name, and I'll send the playlist ID.\n\n"
+        "6️⃣ Use `/createplaylist` or `/cp` to make a new playlist and set it as default.\n"
+        "7️⃣ Use `/setprefix` or `/sp` to set Prefix.\n"
+        "8️⃣ Use `/setsuffix` or `/ss` to set Suffix.\n"
+        "8️⃣ Use `/setplaylist` or `/spid` to manually set Playlist ID.\n"
+        "9️⃣ Use `/showsettings` or `/sst` to To See the Newly Added or Updated Settings.\n"
+        "🔟 Use `/resetsettings` or `/rst` to To Reset the Settings.\n\n"
         
         "🔔 **Notes:**\n"
     "🚫 **Daily Upload Limit:** YouTube API allows ~6 uploads per day due to quota limits.\n"
