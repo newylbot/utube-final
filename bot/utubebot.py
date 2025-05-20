@@ -24,7 +24,7 @@ class UtubeBot(Client):
 
     def add_dynamic_commands(self):
         # Set Prefix Command
-        @self.on_message(filters.command(["setprefix", "setp"]) & filters.user(Config.BOT_OWNER))
+        @self.on_message(filters.command(["setprefix", "sp"]) & filters.user(Config.BOT_OWNER))
         async def set_prefix(client, message):
             if len(message.command) < 2:
                 await message.reply(
@@ -37,7 +37,7 @@ class UtubeBot(Client):
             await message.reply(f"✅ Prefix updated to:\n`{prefix}`", quote=True)
 
         # Set Suffix Command
-        @self.on_message(filters.command(["setsuffix", "sets"]) & filters.user(Config.BOT_OWNER))
+        @self.on_message(filters.command(["setsuffix", "ss"]) & filters.user(Config.BOT_OWNER))
         async def set_suffix(client, message):
             if len(message.command) < 2:
                 await message.reply(
@@ -50,7 +50,7 @@ class UtubeBot(Client):
             await message.reply(f"✅ Suffix updated to:\n`{suffix}`", quote=True)
 
         # Set Playlist ID Command
-        @self.on_message(filters.command(["setplaylist", "setpid"]) & filters.user(Config.BOT_OWNER))
+        @self.on_message(filters.command(["setplaylist", "spid"]) & filters.user(Config.BOT_OWNER))
         async def set_playlist(client, message):
             if len(message.command) < 2:
                 await message.reply(
@@ -92,7 +92,7 @@ class UtubeBot(Client):
                 await message.reply(f"❌ Failed to create playlist: {e}", quote=True)
 
         # Show Current Settings Command
-        @self.on_message(filters.command(["showsettings", "shows"]) & filters.user(Config.BOT_OWNER))
+        @self.on_message(filters.command(["showsettings", "sst"]) & filters.user(Config.BOT_OWNER))
         async def show_settings(client, message):
             settings = self.db.get_settings()  # Get settings from SQLite
             reply = (
@@ -104,7 +104,7 @@ class UtubeBot(Client):
             await message.reply(reply, quote=True)
 
         # Reshow Command (clear all settings)
-        @self.on_message(filters.command(["resetshows", "reshows"]) & filters.user(Config.BOT_OWNER))
+        @self.on_message(filters.command(["resetshows", "rst"]) & filters.user(Config.BOT_OWNER))
         async def reshow(client, message):
             # Clear stored prefix, suffix, and playlist ID
             self.db.update_setting("video_title_prefix", "")
