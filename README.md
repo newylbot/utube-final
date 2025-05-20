@@ -122,11 +122,18 @@ python3 run.py
 
 ↪️ If everything is set up correctly, the bot should be running. Use `/start` to check.
 
-### 🎞️ **Creating Playlists from Telegram**
+### 🎞 **Creating Playlists from Telegram**
 
-Run `/createplaylist` or `/cp` and I'll ask for a privacy level.
-Choose **Private**, **Unlisted**, or **Public**, then send the playlist name.
-The playlist is created and the ID is saved as the default for uploads.
+You can make a new playlist without leaving Telegram:
+
+```bash
+/createplaylist My Awesome Playlist
+# or simply
+/cp My Awesome Playlist
+```
+
+The playlist becomes the default for future uploads. Playlists are created as
+**private** by default, but you can change the visibility later on YouTube.
 
 ---
 
