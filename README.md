@@ -133,7 +133,7 @@ You can make a new playlist without leaving Telegram:
 ```
 
 The playlist becomes the default for future uploads. Playlists are created as
-**private** by default, but you can change the visibility later on YouTube.
+**unlisted** by default, but you can change the visibility later on YouTube.
 
 ---
 
