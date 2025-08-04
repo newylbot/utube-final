@@ -227,13 +227,3 @@ For support, contact **[๏ ʟᴜᴍɪɴᴏ ⇗ ˣᵖ](https://telegram.dog/itz_
 Released under [GNU GPL v3.0](LICENSE).
 
 ---
-
-**Includes:**
-
-* FFmpeg setup instructions
-* Interactive menu
-* Automated command registration
-* System stats, upload queue, schedule, thumbnail, playlist & owner features
-* Everything up to date!
-
----
