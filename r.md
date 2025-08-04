@@ -1,12 +1,9 @@
----
 
-````markdown
 # 🚀 **YouTube Uploader Bot**  
 
 A powerful Telegram bot to upload videos to YouTube using the [YouTube Data API v3](https://developers.google.com/youtube/v3/).  
 Built in Python 3, fully automated setup, and rich Telegram UI.
 
----
 
 ## ⚡ **Features**  
 
