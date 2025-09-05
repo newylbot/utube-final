@@ -28,7 +28,7 @@ A simple Telegram bot to upload videos to YouTube using the [YouTube Data API v3
 ### ⏬ **Clone & Virtual Environment (For Local Setup)**  
 
 ```bash
-git clone https://github.com/newylbot/utube-final.git uptube  
+git clone https://github.com/newylbot/utube-final uptube  
 cd uptube  
 python3 -m venv venv  
 source venv/bin/activate  
